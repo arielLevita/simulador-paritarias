@@ -8,7 +8,8 @@ function App() {
     setPorcentajeAntiguedad,
     updateItem,
     addItem,
-    removeItem
+    removeItem,
+    copyFromPrevious
   } = useSalaryProjections();
 
   return (
@@ -50,6 +51,7 @@ function App() {
               onUpdateItem={updateItem}
               onAddItem={addItem}
               onRemoveItem={removeItem}
+              onCopyFromPrevious={copyFromPrevious}
             />
           ))}
         </div>

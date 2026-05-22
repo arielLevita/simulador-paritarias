@@ -81,5 +81,25 @@ export const useSalaryProjections = () => {
         );
     };
 
-    return { months, porcentajeAntiguedad, setPorcentajeAntiguedad, updateItem, addItem, removeItem };
+    const copyFromPrevious = (monthIndex) => {
+        if (monthIndex === 0) return; // No se puede copiar nada al primer mes
+
+        setMonths((prevMonths) => {
+            // Obtenemos una copia profunda de los ítems del mes anterior (N-1)
+            const previousItems = JSON.parse(JSON.stringify(prevMonths[monthIndex - 1].items));
+
+            return prevMonths.map((month, mIdx) => {
+                // Los meses anteriores al seleccionado no cambian
+                if (mIdx < monthIndex) return month;
+
+                // El mes seleccionado y todos los futuros ahora tienen los ítems del mes anterior al seleccionado
+                return {
+                    ...month,
+                    items: JSON.parse(JSON.stringify(previousItems))
+                };
+            });
+        });
+    };
+
+    return { months, porcentajeAntiguedad, setPorcentajeAntiguedad, updateItem, addItem, removeItem, copyFromPrevious };
 };

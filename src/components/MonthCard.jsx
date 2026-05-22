@@ -5,7 +5,8 @@ export const MonthCard = ({
     globalAntiguedad,
     onUpdateItem,
     onAddItem,
-    onRemoveItem
+    onRemoveItem,
+    onCopyFromPrevious
 }) => {
     // Realizamos los cálculos dinámicos para este mes
     const { items, totalHaberes, totalDescuentos, neto } = calculateMonthTotals(
@@ -52,13 +53,25 @@ export const MonthCard = ({
         <div className="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col h-full hover:shadow-lg transition-shadow overflow-hidden">
             {/* Cabecera del Mes */}
             <div className="bg-slate-700 p-3 flex justify-between items-center">
-                <h2 className="text-white font-bold tracking-wide">{month.nombre}</h2>
-                <button
-                    onClick={handleAddNewItem}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold py-1 px-2 rounded transition-colors"
-                >
-                    + AGREGAR
-                </button>
+                <h2 className="text-white font-bold tracking-wide leading-none">{month.nombre}</h2>
+
+                <div className="flex items-center">
+                    <button
+                        onClick={handleAddNewItem}
+                        className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold py-1.5 px-3 rounded shadow-sm transition-colors"
+                    >
+                        + AGREGAR
+                    </button>
+                    {month.id > 0 && (
+                        <button
+                            onClick={() => onCopyFromPrevious(month.id)}
+                            className="text-[9px] text-slate-300 hover:text-white mt-1 mx-2 underline decoration-slate-500 underline-offset-2 transition-colors text-left"
+                        >
+                            <p className="text-center">Igualarar al</p>
+                            <p className="text-center">mes anterior</p>
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Cuerpo: Tabla de Ítems */}

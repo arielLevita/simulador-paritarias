@@ -134,19 +134,19 @@ export const MonthCard = ({
                 <div className="flex justify-between text-[11px] text-slate-500">
                     <span>TOTAL HABERES (BRUTO)</span>
                     <span className="font-bold text-slate-700">
-                        ${totalHaberes.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                        ${totalHaberes.toFixed(2).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                     </span>
                 </div>
                 <div className="flex justify-between text-[11px] text-slate-500">
                     <span>TOTAL DESCUENTOS</span>
                     <span className="font-bold text-slate-700">
-                        -${totalDescuentos.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                        -${totalDescuentos.toFixed(2).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                     </span>
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-slate-300 mt-2">
                     <span className="text-sm font-black text-slate-800">NETO A COBRAR:</span>
                     <span className="text-xl font-black text-blue-700">
-                        ${neto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                        ${neto.toFixed(2).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                     </span>
                 </div>
             </div>

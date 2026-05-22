@@ -1,0 +1,147 @@
+import { calculateMonthTotals } from "../utils/calculations";
+
+export const MonthCard = ({
+    month,
+    globalAntiguedad,
+    onUpdateItem,
+    onAddItem,
+    onRemoveItem
+}) => {
+    // Realizamos los cálculos dinámicos para este mes
+    const { items, totalHaberes, totalDescuentos, neto } = calculateMonthTotals(
+        month.items,
+        globalAntiguedad
+    );
+
+    // Función para manejar la creación de un nuevo ítem
+    const handleAddNewItem = () => {
+        const descripcion = prompt("Nombre del nuevo concepto:");
+        if (!descripcion) return;
+
+        // Generamos un código único temporal si no se provee uno
+        const defaultCodigo = Date.now().toString().slice(-4);
+        const codigo = prompt("Código (4 dígitos):", defaultCodigo);
+
+        const tipo = confirm("¿Es un HABER (Suma)? \nPresione 'Aceptar' para HABER o 'Cancelar' para DESCUENTO")
+            ? "positivo"
+            : "negativo";
+
+        const tipoCalculo = prompt(
+            "Tipo de cálculo: \n- fijo\n- porcentaje_basico\n- porcentaje_haberes",
+            "fijo"
+        );
+
+        onAddItem(month.id, {
+            codigo: codigo || defaultCodigo,
+            descripcion: descripcion.toUpperCase(),
+            tipo,
+            tipoCalculo: tipoCalculo || "fijo",
+            valor: 0
+        });
+    };
+
+    return (
+        <div className="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col h-full hover:shadow-lg transition-shadow overflow-hidden">
+            {/* Cabecera del Mes */}
+            <div className="bg-slate-700 p-3 flex justify-between items-center">
+                <h2 className="text-white font-bold tracking-wide">{month.nombre}</h2>
+                <button
+                    onClick={handleAddNewItem}
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold py-1 px-2 rounded transition-colors"
+                >
+                    + AGREGAR
+                </button>
+            </div>
+
+            {/* Cuerpo: Tabla de Ítems */}
+            <div className="p-4 grow overflow-auto">
+                <table className="w-full text-left border-collapse">
+                    <thead>
+                        <tr className="text-[10px] uppercase text-slate-400 border-b">
+                            <th className="pb-2 font-medium">Cód</th>
+                            <th className="pb-2 font-medium">Concepto</th>
+                            <th className="pb-2 text-right font-medium">Valor/%</th>
+                            <th className="pb-2 text-right font-medium">Importe</th>
+                            <th className="pb-2 w-4"></th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                        {items.map((item, idx) => {
+                            const isAntiguedad = item.codigo === "1125";
+                            const isBasico = item.codigo === "1110";
+                            const isPositive = item.tipo === "positivo";
+
+                            return (
+                                <tr key={`${item.codigo}-${idx}`} className="text-sm group hover:bg-slate-50">
+                                    <td className="py-2 text-[10px] text-slate-400 font-mono">{item.codigo}</td>
+                                    <td className="py-2 pr-2">
+                                        <div className="font-medium text-slate-700 text-xs leading-tight">
+                                            {item.descripcion}
+                                        </div>
+                                    </td>
+                                    <td className="py-2 text-right">
+                                        {isAntiguedad ? (
+                                            <span className="text-blue-600 font-bold text-xs">{globalAntiguedad}%</span>
+                                        ) : (
+                                            <div className="flex flex-col items-end">
+                                                <input
+                                                    type="number"
+                                                    className="w-20 text-right border-slate-200 rounded text-xs p-1 focus:ring-1 focus:ring-blue-400 outline-none"
+                                                    value={item.valor}
+                                                    onChange={(e) => onUpdateItem(month.id, idx, {
+                                                        ...item,
+                                                        valor: parseFloat(e.target.value) || 0
+                                                    })}
+                                                />
+                                                <span className="text-[8px] text-slate-400 uppercase mt-0.5">
+                                                    {item.tipoCalculo.replace('_', ' ')}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td className={`py-2 text-right font-mono font-bold text-xs ${isPositive ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                        {isPositive ? "" : "-"}{item.calculatedAmount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </td>
+                                    <td className="py-2 text-right">
+                                        {/* El Sueldo Básico y la Antigüedad no se deberían borrar para no romper la lógica */}
+                                        {!isBasico && !isAntiguedad && (
+                                            <button
+                                                onClick={() => onRemoveItem(month.id, item.codigo)}
+                                                className="text-slate-300 hover:text-rose-500 transition-colors ml-2 font-bold"
+                                                title="Eliminar concepto"
+                                            >
+                                                &times;
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Pie: Totales y Neto */}
+            <div className="bg-slate-50 p-4 border-t border-slate-200 space-y-1">
+                <div className="flex justify-between text-[11px] text-slate-500">
+                    <span>TOTAL HABERES (BRUTO)</span>
+                    <span className="font-bold text-slate-700">
+                        ${totalHaberes.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                    </span>
+                </div>
+                <div className="flex justify-between text-[11px] text-slate-500">
+                    <span>TOTAL DESCUENTOS</span>
+                    <span className="font-bold text-slate-700">
+                        -${totalDescuentos.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                    </span>
+                </div>
+                <div className="flex justify-between items-center pt-2 border-t border-slate-300 mt-2">
+                    <span className="text-sm font-black text-slate-800">NETO A COBRAR:</span>
+                    <span className="text-xl font-black text-blue-700">
+                        ${neto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
+};

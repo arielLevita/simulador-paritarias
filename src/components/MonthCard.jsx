@@ -15,27 +15,35 @@ export const MonthCard = ({
 
     // Función para manejar la creación de un nuevo ítem
     const handleAddNewItem = () => {
-        const descripcion = prompt("Nombre del nuevo concepto:");
+        const descripcion = prompt("Nombre del nuevo concepto (ej: ADICIONAL JC):");
         if (!descripcion) return;
 
-        // Generamos un código único temporal si no se provee uno
         const defaultCodigo = Date.now().toString().slice(-4);
         const codigo = prompt("Código (4 dígitos):", defaultCodigo);
 
-        const tipo = confirm("¿Es un HABER (Suma)? \nPresione 'Aceptar' para HABER o 'Cancelar' para DESCUENTO")
+        const tipo = confirm("¿Es un HABER (Suma)? \n'Aceptar' para HABER / 'Cancelar' para DESCUENTO")
             ? "positivo"
             : "negativo";
 
-        const tipoCalculo = prompt(
-            "Tipo de cálculo: \n- fijo\n- porcentaje_basico\n- porcentaje_haberes",
-            "fijo"
-        );
+        // Actualizamos el prompt para incluir la nueva opción
+        const msg = "Elija el tipo de cálculo:\n" +
+            "1: fijo (Monto en $)\n" +
+            "2: porcentaje_basico (% sobre Básico)\n" +
+            "3: porcentaje_basico_jc (% sobre Básico JC x1.75)\n" +
+            "4: porcentaje_haberes (% sobre Total Bruto)";
+
+        const seleccion = prompt(msg, "1");
+
+        let tipoCalculo = "fijo";
+        if (seleccion === "2") tipoCalculo = "porcentaje_basico";
+        if (seleccion === "3") tipoCalculo = "porcentaje_basico_jc";
+        if (seleccion === "4") tipoCalculo = "porcentaje_haberes";
 
         onAddItem(month.id, {
             codigo: codigo || defaultCodigo,
             descripcion: descripcion.toUpperCase(),
             tipo,
-            tipoCalculo: tipoCalculo || "fijo",
+            tipoCalculo,
             valor: 0
         });
     };
@@ -94,7 +102,7 @@ export const MonthCard = ({
                                                     })}
                                                 />
                                                 <span className="text-[8px] text-slate-400 uppercase mt-0.5">
-                                                    {item.tipoCalculo.replace('_', ' ')}
+                                                    {item.tipoCalculo === "porcentaje_basico_jc" ? "% BÁSICO JC" : item.tipoCalculo.replace('_', ' ')}
                                                 </span>
                                             </div>
                                         )}

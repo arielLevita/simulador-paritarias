@@ -15,14 +15,15 @@ function App() {
   return (
     <div className="min-h-screen bg-pink-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
+        <header className="flex flex-wrap justify-between mb-8 w-full">
           <div>
-
             <h1 className="text-3xl font-black text-slate-900">Simulador Paritario</h1>
             <p className="text-slate-500">Ajuste de escalas y proyecciones de haberes</p>
           </div>
 
-          
+          <div className="w-40 h-fit">
+            <img src="/logotd.png" alt="logo tribuna docente" />
+          </div>
         </header>
 
         {/* Panel de Configuración Global */}

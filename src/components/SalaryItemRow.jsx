@@ -30,7 +30,7 @@ export const SalaryItemRow = ({ item, onUpdate, onDelete }) => {
             <td className="py-2 px-1 text-right">
                 <button
                     onClick={() => onDelete(item.codigo)}
-                    className="text-gray-300 hover:text-red-500 transition-colors"
+                    className="text-gray-500 hover:text-red-500 transition-colors"
                 >
                     &times;
                 </button>

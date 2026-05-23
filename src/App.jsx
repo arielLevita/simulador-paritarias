@@ -13,17 +13,22 @@ function App() {
   } = useSalaryProjections();
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+    <div className="min-h-screen bg-pink-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
-          <h1 className="text-3xl font-black text-slate-900">Simulador Paritario</h1>
-          <p className="text-slate-500">Ajuste de escalas y proyecciones de haberes</p>
+          <div>
+
+            <h1 className="text-3xl font-black text-slate-900">Simulador Paritario</h1>
+            <p className="text-slate-500">Ajuste de escalas y proyecciones de haberes</p>
+          </div>
+
+          
         </header>
 
         {/* Panel de Configuración Global */}
-        <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-8 flex flex-wrap items-center gap-6">
+        <section className="bg-white p-6 rounded-xl shadow-sm border border-pink-200 mb-8 flex flex-wrap items-center gap-6">
           <div className="flex flex-col">
-            <label className="text-xs font-bold uppercase text-slate-400 mb-1">Configuración Global</label>
+            <label className="text-xs font-bold uppercase text-slate-700 mb-1">Configuración Global</label>
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium text-slate-700">Antigüedad acumulada:</span>
               <div className="relative">
@@ -31,9 +36,9 @@ function App() {
                   type="number"
                   value={porcentajeAntiguedad}
                   onChange={(e) => setPorcentajeAntiguedad(parseFloat(e.target.value) || 0)}
-                  className="w-24 p-2 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-24 p-2 bg-pink-50 border border-pink-300 rounded-lg text-gray-700 font-bold focus:ring-2 focus:ring-blue-500 outline-none text-center"
                 />
-                <span className="absolute right-3 top-2 text-blue-400">%</span>
+                <span className="absolute right-3 top-2 text-gray-400">%</span>
               </div>
             </div>
           </div>

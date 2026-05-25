@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react"
 import { useSalaryProjections } from "./hooks/useSalaryProjections";
 import { MonthCard } from "./components/MonthCard";
 
@@ -62,6 +63,7 @@ function App() {
           ))}
         </div>
       </div>
+      <Analytics />
     </div>
   );
 }
